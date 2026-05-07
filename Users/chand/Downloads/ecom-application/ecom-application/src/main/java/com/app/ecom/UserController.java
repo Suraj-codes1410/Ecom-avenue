@@ -1,7 +1,6 @@
 package com.app.ecom;
 
 
- import org.apache.coyote.Response;
  import org.springframework.http.HttpStatus;
  import org.springframework.http.ResponseEntity;
  import org.springframework.web.bind.annotation.*;
@@ -36,6 +35,15 @@ public class UserController {
         return userService.fetchUser(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(()-> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/api/users/updateInfo/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id
+    ,@RequestBody User updatedUser){
+     boolean updated = userService.updateUser(id,updatedUser);
+     if(updated)
+         return new ResponseEntity<>("User Updated Successfully",HttpStatus.OK);
+     return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/api/users")

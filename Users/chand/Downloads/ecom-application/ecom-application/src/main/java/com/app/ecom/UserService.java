@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
+import static java.util.spi.ToolProvider.findFirst;
 
 @Service
 public class UserService {
@@ -24,4 +27,16 @@ public class UserService {
                 .findFirst();
         }
 
-}
+    public boolean updateUser(Long id, User updatedUser) {
+        return userList.stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst()
+                .map(existingUser ->{ existingUser.setFirstName(updatedUser.getFirstName());
+                        existingUser.setLastName(updatedUser.getLastName());
+                          return true;}).orElse(false);
+
+    }
+
+    }
+
+

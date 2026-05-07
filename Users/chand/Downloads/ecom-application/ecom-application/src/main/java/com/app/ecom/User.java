@@ -1,6 +1,5 @@
 package com.app.ecom;
 
-import com.fasterxml.jackson.annotation.JsonTypeId;
 import lombok.Data;
 
 @Data
