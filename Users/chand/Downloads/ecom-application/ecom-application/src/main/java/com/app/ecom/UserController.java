@@ -9,6 +9,7 @@ package com.app.ecom;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/users") // Base URL
 public class UserController {
 
     private  UserService userService;
@@ -19,13 +20,13 @@ public class UserController {
 
     private List<User> userList = new ArrayList<>();
 
-    @GetMapping("/api/users")
+    @GetMapping("/")
     public ResponseEntity<List<User>> getAllusers(){
         return new ResponseEntity<>(userService.fetchAllUser(),
                 HttpStatus.OK);
     }
 
-    @GetMapping("/api/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User>  getUser(@PathVariable Long id){
 //        User user = userService.fetchUser(id);
 //        if(user == null)
@@ -37,7 +38,7 @@ public class UserController {
                 .orElseGet(()-> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/api/users/updateInfo/{id}")
+    @PutMapping("/updateInfo/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id
     ,@RequestBody User updatedUser){
      boolean updated = userService.updateUser(id,updatedUser);
@@ -46,7 +47,7 @@ public class UserController {
      return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/api/users")
+    @PostMapping("/")
      public ResponseEntity<String> createUser(@RequestBody User user){
          userService.addUser(user) ;
          return new ResponseEntity<>("User added Successfully",HttpStatus.OK);
