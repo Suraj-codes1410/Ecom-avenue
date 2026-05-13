@@ -11,28 +11,29 @@ import static java.util.spi.ToolProvider.findFirst;
 
 @Service
 public class UserService {
-    private List<User> userList = new ArrayList<>();
+    private final UserRepository userRepository;
+    //private List<User> userList = new ArrayList<>();
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> fetchAllUser(){
-        return userList;
+        return userRepository.findAll();
     }
     Long id = 1L;
     public void addUser(User user){
-        user.setId(id++);
-        userList.add(user);
+        userRepository.save(user);
     }
     public Optional<User> fetchUser(Long id){
-        return userList.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst();
+        return userRepository.findById(id);
         }
 
     public boolean updateUser(Long id, User updatedUser) {
-        return userList.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
+        return userRepository.findById(id)
                 .map(existingUser ->{ existingUser.setFirstName(updatedUser.getFirstName());
                         existingUser.setLastName(updatedUser.getLastName());
+                        userRepository.save(existingUser);
                           return true;}).orElse(false);
 
     }
