@@ -1,33 +1,36 @@
-package com.app.ecom;
+package com.app.ecom.controller;
 
 
+ import com.app.ecom.dto.AddressDTO;
+ import com.app.ecom.dto.UserRequest;
+ import com.app.ecom.dto.UserResponse;
+ import com.app.ecom.model.User;
+ import com.app.ecom.service.UserService;
  import org.springframework.http.HttpStatus;
  import org.springframework.http.ResponseEntity;
  import org.springframework.web.bind.annotation.*;
 
- import java.util.ArrayList;
-import java.util.List;
+ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users") // Base URL
 public class UserController {
 
-    private  UserService userService;
+    private UserService userService;
 
     public UserController(UserService userService){
         this.userService = userService;
     }
 
-    private List<User> userList = new ArrayList<>();
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllusers(){
+   @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllusers(){
         return new ResponseEntity<>(userService.fetchAllUser(),
                 HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User>  getUser(@PathVariable Long id){
+    public ResponseEntity<UserResponse>  getUser(@PathVariable Long id){
 //        User user = userService.fetchUser(id);
 //        if(user == null)
 //            return ResponseEntity.notFound().build();
@@ -47,10 +50,11 @@ public class UserController {
      return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/")
-     public ResponseEntity<String> createUser(@RequestBody User user){
-         userService.addUser(user) ;
+    @PostMapping
+     public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest){
+         userService.addUser(userRequest) ;
          return new ResponseEntity<>("User added Successfully",HttpStatus.OK);
     }
+
 
 }
