@@ -74,6 +74,7 @@ public class UserService {
 
     private UserResponse mapToUserResponse(User user) {
         UserResponse response = new UserResponse();
+
         response.setId(String.valueOf(user.getId()));
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
@@ -82,14 +83,19 @@ public class UserService {
         response.setRole(user.getRole());
 
         if (user.getAddress() != null) {
+
             AddressDTO addressDto = new AddressDTO();
-            addressDto.setStreet(addressDto.getStreet());
-            addressDto.setCity(addressDto.getCity());
-            addressDto.setState(addressDto.getState());
-            addressDto.setZipcode(addressDto.getZipcode());
+
+            addressDto.setStreet(user.getAddress().getStreet());
+            addressDto.setCity(user.getAddress().getCity());
+            addressDto.setState(user.getAddress().getState());
+            addressDto.setZipcode(user.getAddress().getZipcode());
+            addressDto.setCountry(user.getAddress().getCountry());
+
             response.setAddress(addressDto);
         }
-return response;
+
+        return response;
     }
 }
 
