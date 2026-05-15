@@ -9,6 +9,5 @@ public class UserRequest {
     private String lastName;
     private String email;
     private String phone;
-    private String role;
-    private AddressDTO addressDTO;
+    private AddressDTO address;
 }

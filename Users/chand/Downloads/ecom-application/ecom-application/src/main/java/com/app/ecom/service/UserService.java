@@ -13,67 +13,66 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Nodes.collect;
-
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    //private List<User> userList = new ArrayList<>();
-
 
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public List<UserResponse> fetchAllUser(){
+    public List<UserResponse> fetchAllUser() {
         return userRepository.findAll().stream()
                 .map(this::mapToUserResponse)
                 .collect(Collectors.toList());
     }
 
 
-
-    public void addUser(UserRequest userRequest){
+    public void addUser(UserRequest userRequest) {
 
         User user = new User();
-        updateUserFromRequest(user,userRequest);
+        updateUserFromRequest(user, userRequest);
         userRepository.save(user);
     }
-    public Optional<UserResponse> fetchUser(Long id){
-        return userRepository.findById(id);
 
-        }
-
-    public boolean updateUser(Long id, UserRequest updatedUser) {
+    public Optional<UserResponse> fetchUser(Long id) {
         return userRepository.findById(id)
-                .map(existingUser ->{ existingUser.setFirstName(updatedUser.getFirstName());
-                        existingUser.setLastName(updatedUser.getLastName());
-                        userRepository.save(existingUser);
-                          return true;}).orElse(false);
+                .map(this::mapToUserResponse);
 
     }
 
-    private void updateUserFromRequest(User user , UserRequest userRequest){
-    if(user.getRole()==null){
-        user.setRole(UserRole.CUSTOMER);
-    }
-    user.setFirstName(user.getFirstName());
-    user.setLastName(user.getLastName());
-    user.setEmail(user.getEmail());
-    user.setPhone(user.getPhone());
-    if(user.getAddress()!=null){
-        Address address = new Address();
-        address.setStreet(userRequest.getAddressDTO().getStreet());
-        address.setState(userRequest.getAddressDTO().getState());
-        address.setCity(userRequest.getAddressDTO().getCity());
-        address.setZipcode(userRequest.getAddressDTO().getZipcode());
-        address.setCountry(userRequest.getAddressDTO().getCountry());
-    }
-    }
-}
+    public boolean updateUser(Long id, UserRequest updatedUserRequest) {
+        return userRepository.findById(id)
+                .map(existingUser -> {
+                    updateUserFromRequest(existingUser,updatedUserRequest);
+                    userRepository.save(existingUser);
+                    return true;
+                }).orElse(false);
 
-    private UserResponse mapToUserResponse(User user){
+    }
+
+    private void updateUserFromRequest(User user, UserRequest userRequest) {
+        if (user.getRole() == null) {
+            user.setRole(UserRole.CUSTOMER);
+        }
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
+        user.setEmail(userRequest.getEmail());
+        user.setPhone(userRequest.getPhone());
+        if (userRequest.getAddress() != null) {
+            Address address = new Address();
+            address.setStreet(userRequest.getAddress().getStreet());
+            address.setState(userRequest.getAddress().getState());
+            address.setCity(userRequest.getAddress().getCity());
+            address.setZipcode(userRequest.getAddress().getZipcode());
+            address.setCountry(userRequest.getAddress().getCountry());
+            user.setAddress(address);
+        }
+    }
+
+
+    private UserResponse mapToUserResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(String.valueOf(user.getId()));
         response.setFirstName(user.getFirstName());
@@ -82,15 +81,17 @@ public class UserService {
         response.setPhone(user.getPhone());
         response.setRole(user.getRole());
 
-        if(user.getAddress()!=null){
+        if (user.getAddress() != null) {
             AddressDTO addressDto = new AddressDTO();
             addressDto.setStreet(addressDto.getStreet());
             addressDto.setCity(addressDto.getCity());
             addressDto.setState(addressDto.getState());
             addressDto.setZipcode(addressDto.getZipcode());
-            response.setAddressDTO(addressDto);
+            response.setAddress(addressDto);
         }
-
+return response;
     }
+}
+
 
 

@@ -4,8 +4,6 @@ import com.app.ecom.model.UserRole;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 public class UserResponse {
@@ -16,7 +14,7 @@ public class UserResponse {
     private String phone;
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.CUSTOMER;
-    private AddressDTO addressDTO;
+    private AddressDTO address;
 
 
 }

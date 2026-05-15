@@ -1,10 +1,8 @@
 package com.app.ecom.controller;
 
 
- import com.app.ecom.dto.AddressDTO;
  import com.app.ecom.dto.UserRequest;
  import com.app.ecom.dto.UserResponse;
- import com.app.ecom.model.User;
  import com.app.ecom.service.UserService;
  import org.springframework.http.HttpStatus;
  import org.springframework.http.ResponseEntity;
@@ -43,8 +41,8 @@ public class UserController {
 
     @PutMapping("/updateInfo/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id
-    ,@RequestBody User updatedUser){
-     boolean updated = userService.updateUser(id,updatedUser);
+    ,@RequestBody UserRequest updatedUserRequest){
+     boolean updated = userService.updateUser(id,updatedUserRequest);
      if(updated)
          return new ResponseEntity<>("User Updated Successfully",HttpStatus.OK);
      return ResponseEntity.notFound().build();
