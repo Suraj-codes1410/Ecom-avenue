@@ -6,6 +6,10 @@ import com.app.ecom.model.Product;
 import com.app.ecom.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductService {
 
@@ -42,5 +46,20 @@ public class ProductService {
         product.setDescription(productRequest.getDescription());
         product.setImageUrl(productRequest.getImageUrl());
         product.setStockQuantity(productRequest.getStockQuantity());
+    }
+
+    public Optional<ProductResponse> updateProduct(Long id, ProductRequest productRequest) {
+        return productRepository.findById(id)
+                .map(existingProduct ->{
+                    updateProductFromRequest(existingProduct,productRequest);
+                    Product savedProduct = productRepository.save(existingProduct);
+                    return mapToProductResponse(savedProduct) ;
+                });
+    }
+
+    public List<ProductResponse> getAllProducts() {
+return productRepository.findByActiveTrue().stream()
+        .map(this::mapToProductResponse)
+        .collect(Collectors.toList());
     }
 }
