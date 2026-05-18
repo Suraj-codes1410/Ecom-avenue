@@ -62,4 +62,13 @@ return productRepository.findByActiveTrue().stream()
         .map(this::mapToProductResponse)
         .collect(Collectors.toList());
     }
+
+    public boolean deleteProduct(Long id) {
+        return productRepository.findById(id)
+                .map(product -> {
+                    product.setActive(false);
+                    productRepository.save(product);
+                    return true;
+                }).orElse(false);
+    }
 }
