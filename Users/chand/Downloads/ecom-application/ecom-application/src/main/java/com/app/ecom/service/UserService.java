@@ -4,7 +4,7 @@ import com.app.ecom.dto.AddressDTO;
 import com.app.ecom.dto.UserRequest;
 import com.app.ecom.dto.UserResponse;
 import com.app.ecom.model.Address;
-import com.app.ecom.model.User;
+import com.app.ecom.model.AppUser;
 import com.app.ecom.model.UserRole;
 import com.app.ecom.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -31,9 +31,9 @@ public class UserService {
 
     public void addUser(UserRequest userRequest) {
 
-        User user = new User();
-        updateUserFromRequest(user, userRequest);
-        userRepository.save(user);
+        AppUser appUser = new AppUser();
+        updateUserFromRequest(appUser, userRequest);
+        userRepository.save(appUser);
     }
 
     public Optional<UserResponse> fetchUser(Long id) {
@@ -44,22 +44,22 @@ public class UserService {
 
     public boolean updateUser(Long id, UserRequest updatedUserRequest) {
         return userRepository.findById(id)
-                .map(existingUser -> {
-                    updateUserFromRequest(existingUser,updatedUserRequest);
-                    userRepository.save(existingUser);
+                .map(existingAppUser -> {
+                    updateUserFromRequest(existingAppUser,updatedUserRequest);
+                    userRepository.save(existingAppUser);
                     return true;
                 }).orElse(false);
 
     }
 
-    private void updateUserFromRequest(User user, UserRequest userRequest) {
-        if (user.getRole() == null) {
-            user.setRole(UserRole.CUSTOMER);
+    private void updateUserFromRequest(AppUser appUser, UserRequest userRequest) {
+        if (appUser.getRole() == null) {
+            appUser.setRole(UserRole.CUSTOMER);
         }
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setEmail(userRequest.getEmail());
-        user.setPhone(userRequest.getPhone());
+        appUser.setFirstName(userRequest.getFirstName());
+        appUser.setLastName(userRequest.getLastName());
+        appUser.setEmail(userRequest.getEmail());
+        appUser.setPhone(userRequest.getPhone());
         if (userRequest.getAddress() != null) {
             Address address = new Address();
             address.setStreet(userRequest.getAddress().getStreet());
@@ -67,30 +67,30 @@ public class UserService {
             address.setCity(userRequest.getAddress().getCity());
             address.setZipcode(userRequest.getAddress().getZipcode());
             address.setCountry(userRequest.getAddress().getCountry());
-            user.setAddress(address);
+            appUser.setAddress(address);
         }
     }
 
 
-    private UserResponse mapToUserResponse(User user) {
+    private UserResponse mapToUserResponse(AppUser appUser) {
         UserResponse response = new UserResponse();
 
-        response.setId(String.valueOf(user.getId()));
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-        response.setEmail(user.getEmail());
-        response.setPhone(user.getPhone());
-        response.setRole(user.getRole());
+        response.setId(String.valueOf(appUser.getId()));
+        response.setFirstName(appUser.getFirstName());
+        response.setLastName(appUser.getLastName());
+        response.setEmail(appUser.getEmail());
+        response.setPhone(appUser.getPhone());
+        response.setRole(appUser.getRole());
 
-        if (user.getAddress() != null) {
+        if (appUser.getAddress() != null) {
 
             AddressDTO addressDto = new AddressDTO();
 
-            addressDto.setStreet(user.getAddress().getStreet());
-            addressDto.setCity(user.getAddress().getCity());
-            addressDto.setState(user.getAddress().getState());
-            addressDto.setZipcode(user.getAddress().getZipcode());
-            addressDto.setCountry(user.getAddress().getCountry());
+            addressDto.setStreet(appUser.getAddress().getStreet());
+            addressDto.setCity(appUser.getAddress().getCity());
+            addressDto.setState(appUser.getAddress().getState());
+            addressDto.setZipcode(appUser.getAddress().getZipcode());
+            addressDto.setCountry(appUser.getAddress().getCountry());
 
             response.setAddress(addressDto);
         }
