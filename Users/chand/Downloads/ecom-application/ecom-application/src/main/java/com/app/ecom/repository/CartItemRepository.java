@@ -6,9 +6,13 @@ import com.app.ecom.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     CartItem findByAppUserAndProduct(AppUser appUser, Product product);
 
     void deleteByAppUserAndProduct(AppUser user, Product product);
+
+    List<CartItem> findByAppUser(AppUser appUser);
 }
