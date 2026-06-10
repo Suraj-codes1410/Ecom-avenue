@@ -21,7 +21,10 @@ public class OrderController {
     public ResponseEntity<OrderResponse> createOrder(
             @RequestHeader("X-User-ID")String userId) {
 
-        OrderResponse order = orderService.createOrder(userId);
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+        return orderService.createOrder(userId)
+                .<ResponseEntity<OrderResponse>>map(
+                        orderResponse -> ResponseEntity.status(HttpStatus.CREATED)
+                                .body(orderResponse))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 }
